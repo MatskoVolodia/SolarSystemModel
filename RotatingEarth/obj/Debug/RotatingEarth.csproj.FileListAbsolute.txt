@@ -1,0 +1,16 @@
+C:\vova\CSharp\RotatingEarth\RotatingEarth\bin\Debug\RotatingEarth.exe.config
+C:\vova\CSharp\RotatingEarth\RotatingEarth\bin\Debug\RotatingEarth.exe
+C:\vova\CSharp\RotatingEarth\RotatingEarth\bin\Debug\RotatingEarth.pdb
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.csprojResolveAssemblyReference.cache
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\MainWindow.g.cs
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\App.g.cs
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth_MarkupCompile.cache
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth_MarkupCompile.lref
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\MainWindow.baml
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.g.resources
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.Properties.Resources.resources
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.csproj.GenerateResource.Cache
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.exe
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth.pdb
+C:\vova\CSharp\RotatingEarth\RotatingEarth\obj\Debug\RotatingEarth_Content.g.cs
+C:\vova\CSharp\RotatingEarth\RotatingEarth\bin\Debug\images\background.jpg
