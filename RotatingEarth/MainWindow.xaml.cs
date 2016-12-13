@@ -1,20 +1,16 @@
-﻿using RotatingEarth;
-using RotatingEarth.Abstract;
+﻿using RotatingEarth.Abstract;
+using RotatingEarth.Entities;
+using RotatingEarth.Helpers;
 using RotatingEarth.images;
 using System;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
 namespace RotatingEarth
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public Vector3D CurrentLookDirection
@@ -43,14 +39,16 @@ namespace RotatingEarth
         {
             InitializeComponent();
             SolarSystem = new FakeSolarSystem();
-            SetValues();
+            UpdateSolarSystemSizes();
             DrawOrbits();
-            DrawSaturnRingModel(SaturnRing, SolarSystem.Planets[PlanetNames.Saturn].Diameter*2, new Point3D(SolarSystem.Planets[PlanetNames.Saturn].DistanceToTheSun, 0, 0));
+            Helper.DrawSaturnRingModel(SaturnRing, SolarSystem.Planets[PlanetNames.Saturn].Diameter*2, 
+                new Point3D(SolarSystem.Planets[PlanetNames.Saturn].DistanceToTheSun, 0, 0), RingGeometry, translateRing);
+            helpLabel.Content = "Arrows - Rotate camera \nSpace - Pause/Resume animation \nScroll - Zoom\nS - Toggle fake/real solar system";
         }
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Camera.Position = Camera.Position + Camera.LookDirection * Math.Sign(e.Delta);
+            Camera.Position = Camera.Position + Camera.LookDirection * Math.Sign(e.Delta) * (SolarSystem is RealSolarSystem ? 20 : 1);
         }
 
         private void grid_KeyDown(object sender, KeyEventArgs e)
@@ -92,6 +90,21 @@ namespace RotatingEarth
                         }
                     }
                     break;
+                case Key.S:
+                    if(SolarSystem is RealSolarSystem)
+                    {
+                        SolarSystem = new FakeSolarSystem();
+                    }
+                    else
+                    {
+                        SolarSystem = new RealSolarSystem();
+                    }
+
+                    UpdateSolarSystemSizes();
+                    DrawOrbits();
+                    Helper.DrawSaturnRingModel(SaturnRing, SolarSystem.Planets[PlanetNames.Saturn].Diameter * 2,
+                        new Point3D(SolarSystem.Planets[PlanetNames.Saturn].DistanceToTheSun, 0, 0), RingGeometry, translateRing);
+                    break;
                 default:
                     break;
             }
@@ -106,99 +119,30 @@ namespace RotatingEarth
                 Camera.UpDirection = new Vector3D(Camera.UpDirection.X, Camera.UpDirection.Y * (-1), Camera.UpDirection.Z);
             }
         }
-
-        private void AddCircleModel(double radius)
-        {
-            int k = 0;
-
-            var materialGroup = new MaterialGroup();
-            materialGroup.Children.Add(new DiffuseMaterial(Brushes.LightGray));
-
-            var meshGeometry = new MeshGeometry3D();
-
-            for (float n = 0f; n < 2 * Math.PI; n += 0.01f, k++)
-            {
-                var p = new Point3D(radius * Math.Cos(n), 0, radius * Math.Sin(n));
-                var u = new Point3D(radius * Math.Cos(n), -0.04, radius * Math.Sin(n));
-                meshGeometry.Positions.Add(p);
-                meshGeometry.Positions.Add(u);
-                if (k > 0)
-                {
-                    meshGeometry.TriangleIndices.Add(k);
-                    meshGeometry.TriangleIndices.Add(k - 1);
-                    meshGeometry.TriangleIndices.Add(k + 1);
-                    meshGeometry.TriangleIndices.Add(k);
-                }
-                meshGeometry.TriangleIndices.Add(k);
-                meshGeometry.TriangleIndices.Add(k + 1);
-                k++;
-            }
-
-            var geometryModel = new GeometryModel3D() { Material = materialGroup, BackMaterial = materialGroup, Geometry = meshGeometry };
-            var modelgroup = new Model3DGroup();
-            modelgroup.Children.Add(geometryModel);
-            var model = new ModelVisual3D() { Content = modelgroup };
-
-            model.SetValue(GeometryModel3D.GeometryProperty, meshGeometry);
-            mainViewPort.Children.Add(model);
-        }
+        
         private void DrawOrbits()
         {
+            double thickness = SolarSystem is RealSolarSystem ? 0.4 : 0.04;
             foreach (var item in SolarSystem.Planets)
             {
-                AddCircleModel(item.Value.DistanceToTheSun);
+                Helper.AddCircleModel(thickness, item.Value.DistanceToTheSun, mainViewPort);
             }
         }
 
-        public void SetValues()
+        public void UpdateSolarSystemSizes()
         {
-            BindItem(translateMercury, scaleMercury, PlanetNames.Mercury);
-            BindItem(translateVenus, scaleVenus, PlanetNames.Venus);
-            BindItem(translateEarth, scaleEarth, PlanetNames.Earth);
-            BindItem(translateMars, scaleMars, PlanetNames.Mars);
-            BindItem(translateJupiter, scaleJupiter, PlanetNames.Jupiter);
-            BindItem(translateSaturn, scaleSaturn, PlanetNames.Saturn);
-            BindItem(translateUranus, scaleUranus, PlanetNames.Uranus);
-            BindItem(translateNeptune, scaleNeptune, PlanetNames.Neptune);
+            Helper.BindItem(translateMercury, scaleMercury, PlanetNames.Mercury, SolarSystem);
+            Helper.BindItem(translateVenus, scaleVenus, PlanetNames.Venus, SolarSystem);
+            Helper.BindItem(translateEarth, scaleEarth, PlanetNames.Earth, SolarSystem);
+            Helper.BindItem(translateMars, scaleMars, PlanetNames.Mars, SolarSystem);
+            Helper.BindItem(translateJupiter, scaleJupiter, PlanetNames.Jupiter, SolarSystem);
+            Helper.BindItem(translateSaturn, scaleSaturn, PlanetNames.Saturn, SolarSystem);
+            Helper.BindItem(translateUranus, scaleUranus, PlanetNames.Uranus, SolarSystem);
+            Helper.BindItem(translateNeptune, scaleNeptune, PlanetNames.Neptune, SolarSystem);
 
             scaleSun.ScaleX = SolarSystem.SunDiameter;
             scaleSun.ScaleY = SolarSystem.SunDiameter;
             scaleSun.ScaleZ = SolarSystem.SunDiameter;
-        }
-        public void BindItem(TranslateTransform3D translate, ScaleTransform3D model, PlanetNames name)
-        {
-            model.ScaleX = SolarSystem.Planets[name].Diameter;
-            model.ScaleY = SolarSystem.Planets[name].Diameter;
-            model.ScaleZ = SolarSystem.Planets[name].Diameter;
-
-            translate.OffsetX = SolarSystem.Planets[name].DistanceToTheSun;
-        }
-
-        private void DrawSaturnRingModel(ModelVisual3D vis, double radius, Point3D center)
-        {
-            var geo = new MeshGeometry3D();
-            var resolution = 1000;
-
-            geo.Positions.Add(new Point3D(0, 0, 0));
-            
-            double t = 2 * Math.PI / resolution;
-            for (int i = 0; i < resolution; i++)
-            {
-                geo.Positions.Add(new Point3D(radius * Math.Cos(t * i), 0, -radius * Math.Sin(t * i)));
-            }
-
-            for (int i = 0; i < resolution; i++)
-            {
-                geo.TriangleIndices.Add(0);
-                geo.TriangleIndices.Add(i + 1);
-                geo.TriangleIndices.Add((i < (resolution - 1)) ? i + 2 : 1);
-            }
-
-            RingGeometry.Geometry = geo;
-
-            translateRing.OffsetX = center.X;
-            translateRing.OffsetY = center.Y;
-            translateRing.OffsetZ = center.Z;
         }
     }
 }

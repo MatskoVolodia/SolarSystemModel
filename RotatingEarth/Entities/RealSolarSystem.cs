@@ -6,19 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RotatingEarth.images
+namespace RotatingEarth.Entities
 {
-    public class FakeSolarSystem : ISolarSystem
+    public class RealSolarSystem : ISolarSystem
     {
         public Dictionary<PlanetNames, IPlanet> Planets { get; set; }
 
         public double SunDiameter { get; set; }
 
-        public FakeSolarSystem()
+        public RealSolarSystem()
         {
-            SunDiameter = 3;
+            SunDiameter = 69;
 
-            Planets = Repository.GetSolarSystem("FakeSolarSystem");
+            Planets = Repository.GetSolarSystem("RealSolarSystem");
         }
     }
 }

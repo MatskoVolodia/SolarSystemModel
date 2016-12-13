@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,8 +58,11 @@
     </ApplicationDefinition>
     <Compile Include="Abstract\IPlanet.cs" />
     <Compile Include="Abstract\ISolarSystem.cs" />
+    <Compile Include="Database\Repository.cs" />
     <Compile Include="Entities\FakeSolarSystem.cs" />
     <Compile Include="Entities\Planet.cs" />
+    <Compile Include="Entities\RealSolarSystem.cs" />
+    <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Helpers\Rotator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
